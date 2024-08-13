@@ -1,1 +1,3 @@
-pyaudio
+pyserial
+matplotlib
+scipy

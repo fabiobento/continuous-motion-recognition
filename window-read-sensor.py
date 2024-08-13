@@ -1,30 +1,15 @@
-# Referência:
-#      https://docs.edgeimpulse.com/docs/tools/edge-impulse-for-linux/linux-python-sdk
-#      https://docs.edgeimpulse.com/docs/edge-ai-hardware/cpu/linux-x86_64
-# Ajuda:
-#      python classify.py model.eim
-
 import serial
 import time
 import sys
-from edge_impulse_linux.runner import ImpulseRunner
 
 WINDOW_SIZE = 125
-STRIDE = 50  # Defina o passo(stride), ou seja, o número de amostras para avançar após cada classificação
+STRIDE = 50  # 50  # Defina o passo(stride), ou seja, o número de amostras para avançar após cada classificação
 
 # Configure sua porta serial aqui
 ser = serial.Serial("/dev/ttyACM0", 115200, timeout=1)  # Ajuste conforme necessário
 
 
-def classify_data(features, runner):
-    res = runner.classify(features)
-    print("classificação:")
-    print(res["result"])
-    print("tempo:")
-    print(res["timing"])
-
-
-def read_serial_data(runner):
+def read_serial_data():
     window = []
     try:
         while True:
@@ -35,7 +20,6 @@ def read_serial_data(runner):
                     print("Formato de dados inválido!")
                 else:
                     try:
-                        # 3 valores por timestamp (accX, accY, accZ)
                         accX, accY, accZ = (
                             float(tuple_string[0]),
                             float(tuple_string[1]),
@@ -43,11 +27,11 @@ def read_serial_data(runner):
                         )
                         window.extend([accX, accY, accZ])
                         if len(window) >= WINDOW_SIZE * 3:
-                            classify_data(window[: WINDOW_SIZE * 3], runner)
+                            print(window[: WINDOW_SIZE * 3])
                             # Retenção de parte da janela com base no stride
                             window = window[
                                 STRIDE * 3 :
-                            ]  # Manter os últimos `STRIDE` pontos de dados
+                            ]  # Keep the last `STRIDE` data points
                     except ValueError as e:
                         print(f"Erro de conversão: {e} para a linha '{line}'")
                         continue  # Ignora a linha se a conversão falhar
@@ -59,22 +43,9 @@ def read_serial_data(runner):
 
 
 if __name__ == "__main__":
-    model = (
-        sys.argv[1]
-        if len(sys.argv) > 1
-        else "/home/fabio/Documentos/vscode/continuous-motion-recognition/modelfile.eim"
-    )
-    runner = ImpulseRunner(model)
     try:
-        model_info = runner.init()
-        print(
-            'Carregado o runner para "'
-            + model_info["project"]["owner"]
-            + " / "
-            + model_info["project"]["name"]
-            + '"'
-        )
-        read_serial_data(runner)
+        read_serial_data()
+    except KeyboardInterrupt:
+        print("Parando o script.")
     finally:
-        if runner:
-            runner.stop()
+        ser.close()
