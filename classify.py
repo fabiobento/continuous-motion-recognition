@@ -2,18 +2,31 @@
 #      https://docs.edgeimpulse.com/docs/tools/edge-impulse-for-linux/linux-python-sdk
 #      https://docs.edgeimpulse.com/docs/edge-ai-hardware/cpu/linux-x86_64
 # Ajuda:
-#      python classify.py model.eim
+#      - Primeiro baixe o impulso completo do edge impulse com a seguinte linha de comando:
+#           $ edge-impulse-linux-runner --clean --download modelfile.eim
+#      - Depois execute esse script:
+#           $python3 classify.py ./model.eim
+#
 
 import serial
 import time
 import sys
 from edge_impulse_linux.runner import ImpulseRunner
 
+# Hiperparâmetros para leitura de dados em janela deslizante
 WINDOW_SIZE = 125
-STRIDE = 50  # Defina o passo(stride), ou seja, o número de amostras para avançar após cada classificação
+STRIDE = 50  # 50  # Defina o passo(stride), ou seja, o número de amostras para avançar após cada classificação
 
-# Configure sua porta serial aqui
-ser = serial.Serial("/dev/ttyACM0", 115200, timeout=1)  # Ajuste conforme necessário
+# Configuração da porta serial
+port = "/dev/ttyUSB0"  # Substituir com a sua porta serial
+# Para identificar a porta serial utilize:
+#    ls -la /dev/ttyACM*
+#    ls -la /dev/ttyUSB*
+baudrate = 115200
+timeout = 1  # segundos
+
+# Abrir a porta serial
+ser = serial.Serial(port, baudrate, timeout=timeout)
 
 
 def classify_data(features, runner):
@@ -41,10 +54,7 @@ def read_serial_data(runner):
                             float(tuple_string[2]),
                         )
                         window.extend([accX, accY, accZ])
-                        if (
-                            len(window) >= WINDOW_SIZE * 3
-                        ):  # 3 valores por timestamp (accX, accY, accZ)
-                            # classify_data(window, runner)
+                        if len(window) >= WINDOW_SIZE * 3:
                             classify_data(window[: WINDOW_SIZE * 3], runner)
                             # Retenção de parte da janela com base no stride
                             window = window[

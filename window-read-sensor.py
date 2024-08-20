@@ -2,11 +2,20 @@ import serial
 import time
 import sys
 
+# Hiperparâmetros para leitura de dados em janela deslizante
 WINDOW_SIZE = 125
 STRIDE = 50  # 50  # Defina o passo(stride), ou seja, o número de amostras para avançar após cada classificação
 
-# Configure sua porta serial aqui
-ser = serial.Serial("/dev/ttyACM0", 115200, timeout=1)  # Ajuste conforme necessário
+# Configuração da porta serial
+port = "/dev/ttyUSB0"  # Substituir com a sua porta serial
+# Para identificar a porta serial utilize:
+#    ls -la /dev/ttyACM*
+#    ls -la /dev/ttyUSB*
+baudrate = 115200
+timeout = 1  # segundos
+
+# Abrir a porta serial
+ser = serial.Serial(port, baudrate, timeout=timeout)
 
 
 def read_serial_data():
