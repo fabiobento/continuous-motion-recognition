@@ -66,4 +66,18 @@ fi
 echo "Instalando edge-impulse-cli globalmente com --force..."
 sudo npm install -g edge-impulse-cli --force
 
+# Instala o edge-impulse-linux
+echo "Instalando edge-impulse-linux..."
+sudo npm install -g edge-impulse-linux --force
+
+# Instala os pacotes necessários para o PyAudio
+echo "Instalando dependências do PyAudio..."
+sudo apt-get install -y portaudio19-dev
+
+# Instalar o open-cv
+pip install opencv-python
+
+# Instala a biblioteca do Edge Impulse Linux SDK for Python
+pip install pyaudio edge_impulse_linux
+
 echo "Instalação concluída!"

@@ -74,7 +74,7 @@ if __name__ == "__main__":
     model = (
         sys.argv[1]
         if len(sys.argv) > 1
-        else "/home/fabio/Documentos/vscode/continuous-motion-recognition/modelfile.eim"
+        else "./modelfile.eim"
     )
     runner = ImpulseRunner(model)
     try:
