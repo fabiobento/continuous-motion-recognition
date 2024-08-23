@@ -1,0 +1,20 @@
+{
+	"name": "motion-recon",
+	"build": {
+		"dockerfile": "Dockerfile",
+        "context": ".."
+	},
+    "remoteUser": "fabio",
+	"workspaceMount": "source=/home/fabio/Documentos/vscode/continuous-motion-recognition/,target=/workspace,type=bind,consistency=cached",	
+	"workspaceFolder": "/workspace",
+	"runArgs": [
+		"--gpus","all",
+		"--device=/dev/ttyUSB0:/dev/ttyUSB0",
+		"--privileged", "--tty","-v", "/dev:/dev"],
+	"mounts": [
+		"source=projectname-bashhistory,target=/commandhistory,type=volume"
+	  ],
+	  
+	"forwardPorts": [8888],
+	"postCreateCommand": "sudo usermod -aG dialout fabio && sudo chown fabio /dev/ttyUSB0"	
+}
