@@ -2,7 +2,7 @@ import serial
 import time
 
 # Configuração da porta serial
-port = "/dev/ttyUSB0"  # Substituir com a sua porta serial
+port = "/workspace/dev/ttyUSB0"  # Substituir com a sua porta serial
 # Para identificar a porta serial utilize:
 #    ls -la /dev/ttyACM*
 #    ls -la /dev/ttyUSB*

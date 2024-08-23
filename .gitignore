@@ -4,3 +4,5 @@ IESTI01_TinyML_class_19.pdf
 /.devcontainer
 modelfile.eim
 classify-psd-analysis.py
+/workspace/.devcontainer
+/dev
